@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rural Rest Stats - 데이터 기반 투자 인사이트",
-  description: "한국 관광 통계로 검증된 Rural Rest의 RWA 가치와 투자 기회",
+  title: "Rural Rest 데이터 분석 리포트 - 방한 관광 실측 데이터 기반",
+  description: "공공 데이터를 통한 Rural Rest 비즈니스 가설 검증 및 인바운드 관광 통계 분석",
 };
 
 export default function RootLayout({
