@@ -13,6 +13,7 @@ import { isNull, and } from "drizzle-orm";
 import { MetricCard } from "@/components/metric-card";
 import { NationalityChart } from "@/components/nationality-chart";
 import { AgeChart } from "@/components/age-chart";
+import { ContinentChart } from "@/components/continent-chart";
 import { GenderAgeChart } from "@/components/gender-age-chart";
 import { SpendingTrendChart } from "@/components/spending-trend-chart";
 import {
@@ -308,7 +309,8 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-10">
+            <ContinentChart data={continentChartData} />
             <NationalityChart data={nationalityChartData} />
             <AgeChart data={ageChartData} />
           </div>
