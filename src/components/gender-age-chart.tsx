@@ -187,7 +187,7 @@ export function GenderAgeChart({
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   <LabelList
                     valueAccessor={(entry: any) =>
-                      Number(entry.male ?? 0) + Number(entry.female ?? 0)
+                      Number(entry.payload?.male ?? 0) + Number(entry.payload?.female ?? 0)
                     }
                     position="top"
                     formatter={(v) => `${v}만`}
