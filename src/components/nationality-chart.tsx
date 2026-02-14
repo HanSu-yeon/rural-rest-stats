@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 interface NationalityChartProps {
@@ -95,6 +96,12 @@ export function NationalityChart({ data }: NationalityChartProps) {
                   fill={COLORS[index % COLORS.length]}
                 />
               ))}
+              <LabelList
+                dataKey="percentage"
+                position="right"
+                formatter={(v: number) => `${v}%`}
+                style={{ fontSize: "10px", fill: "#52525b", fontWeight: 600 }}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

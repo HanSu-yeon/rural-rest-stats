@@ -172,19 +172,17 @@ async function seedTouristByCountry() {
     순위: string;
   }>(filePath);
 
-  const data = rows
-    .filter((row) => row["국가"] !== "총계")
-    .map((row) => ({
-      country: row["국가"],
-      touristCount: parseNumber(row["방한 외래관광객"]),
-      previousYearCount: parseNumber(row["전년동기 관광객"]) || null,
-      growthRate: parseNumber(row["전년대비 증감률"]) || null,
-      percentage: parseNumber(row["구성비"]) || null,
-      rank: parseInt(row["순위"]) || null,
-    }));
+  const data = rows.map((row) => ({
+    country: row["국가"],
+    touristCount: parseNumber(row["방한 외래관광객"]),
+    previousYearCount: parseNumber(row["전년동기 관광객"]) || null,
+    growthRate: parseNumber(row["전년대비 증감률"]) || null,
+    percentage: parseNumber(row["구성비"]) || null,
+    rank: parseInt(row["순위"]) || null,
+  }));
 
   await db.insert(touristByCountry).values(data);
-  console.log(`✅ ${data.length}개의 국가별 관광객 데이터 시딩 완료`);
+  console.log(`✅ ${data.length}개의 국가별 관광객 데이터 시딩 완료 (총계 행 포함)`);
 }
 
 // 6. 국적별 방한관광객 요약 (Top 5)

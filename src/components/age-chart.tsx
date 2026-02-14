@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from "recharts";
 
 interface AgeChartProps {
@@ -58,7 +59,14 @@ export function AgeChart({ data }: AgeChartProps) {
                 border: "1px solid #e4e4e7",
               }}
             />
-            <Bar dataKey="count" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="count" fill="#3b82f6" radius={[6, 6, 0, 0]}>
+              <LabelList
+                dataKey="count"
+                position="top"
+                formatter={(v: number) => `${v}천`}
+                style={{ fontSize: "10px", fill: "#3b82f6", fontWeight: 600 }}
+              />
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

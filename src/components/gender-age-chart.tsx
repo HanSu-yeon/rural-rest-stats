@@ -13,6 +13,7 @@ import {
   Cell,
   PieChart,
   Pie,
+  LabelList,
 } from "recharts";
 
 interface GenderAgeChartProps {
@@ -78,6 +79,24 @@ export function GenderAgeChart({
                     dataKey="value"
                     startAngle={90}
                     endAngle={-270}
+                    label={({ cx, cy, midAngle, outerRadius: oR, value, name }) => {
+                      const RADIAN = Math.PI / 180;
+                      const radius = oR + 14;
+                      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                      return (
+                        <text
+                          x={x}
+                          y={y}
+                          textAnchor="middle"
+                          dominantBaseline="central"
+                          style={{ fontSize: "10px", fontWeight: 700, fill: name === "여성" ? "#ec4899" : "#60a5fa" }}
+                        >
+                          {value}%
+                        </text>
+                      );
+                    }}
+                    labelLine={false}
                   >
                     <Cell fill="#ec4899" />
                     <Cell fill="#60a5fa" />
@@ -160,6 +179,14 @@ export function GenderAgeChart({
                       fill={entry.ageGroup === "21~30세" ? "#ec4899" : "#f9a8d4"}
                     />
                   ))}
+                  <LabelList
+                    valueAccessor={(entry: { male: number; female: number }) =>
+                      entry.male + entry.female
+                    }
+                    position="top"
+                    formatter={(v: number) => `${v}만`}
+                    style={{ fontSize: "10px", fill: "#71717a", fontWeight: 600 }}
+                  />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>

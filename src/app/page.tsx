@@ -144,17 +144,18 @@ export default async function Home() {
   const totalVisitors = totalRow?.touristCount ?? trendData.reduce((s, t) => s + t.touristCount, 0);
   const totalVisitorsFormatted = `${(totalVisitors / 10000).toFixed(0)}만`;
   const prevYearVisitors = totalRow?.previousYearCount ?? 0;
-  const yoyGrowthNum = prevYearVisitors > 0
+  const hasYoyData = prevYearVisitors > 0;
+  const yoyGrowthNum = hasYoyData
     ? ((totalVisitors - prevYearVisitors) / prevYearVisitors) * 100
-    : 15.7;
-  const yoyGrowth = Math.abs(yoyGrowthNum).toFixed(1);
-  const yoyPositive = yoyGrowthNum >= 0;
+    : null;
+  const yoyGrowth = yoyGrowthNum !== null ? Math.abs(yoyGrowthNum).toFixed(1) : null;
+  const yoyPositive = yoyGrowthNum !== null ? yoyGrowthNum >= 0 : null;
 
   // ─── 가설 검증 데이터 ──────────────────────────────────
   const hypothesisItems = [
     {
       hypothesis: "농촌 숙소의 1인당 수익이 프리미엄 시장을 지탱할 수 있는가",
-      data: `[2015→2024] $${behavior2015?.avgSpending?.toLocaleString() ?? "1,712"} → $${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"} (10년간 ▲ 9.6%)`,
+      data: `[2024] $${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"} (코로나 이전 $1,712 수준 회복 + 소폭 상회)`,
       result: "confirmed" as const,
     },
     {
@@ -164,7 +165,7 @@ export default async function Home() {
     },
     {
       hypothesis: "만족도와 재방문율이 반복 수익 구조를 형성하는가",
-      data: `[2024] 만족도 ${behavior2024?.satisfaction ?? 96.5}%, 재방문 의향 ${behavior2024?.revisitIntention ?? 92.3}%`,
+      data: `[2015→2024] 만족도 93.5→${behavior2024?.satisfaction ?? 96.5}% (+3.0%p), 재방문 의향 85.6→${behavior2024?.revisitIntention ?? 92.3}% (+6.7%p)`,
       result: "confirmed" as const,
     },
     {
@@ -177,11 +178,11 @@ export default async function Home() {
       data: `[2025] 아시아 비중 80.5%, 대만 ▲ 28.3% 성장 (189만명, 3위)`,
       result: "confirmed" as const,
     },
-    {
+    ...(hasYoyData && yoyGrowth ? [{
       hypothesis: "인바운드 시장이 성장 추세에 있는가",
       data: `[2025 vs 2024] 전년 대비 ${yoyPositive ? "▲" : "▼"} ${yoyGrowth}% 성장, 총 ${totalVisitorsFormatted}명`,
       result: "confirmed" as const,
-    },
+    }] : []),
     {
       hypothesis: "연중 안정적 수요를 기대할 수 있는가",
       data: `[2025] 비수기 관심도 24% vs 피크 100% — 계절 편차 약 4배`,
@@ -204,7 +205,7 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div className="min-w-0">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-4">
-                <span className="text-[10px] sm:text-xs text-blue-200">수익성: 2015 vs 2024</span>
+                <span className="text-[10px] sm:text-xs text-blue-200">수익성: 2015~2024 추이</span>
                 <span className="text-[10px] sm:text-xs text-blue-300/60">|</span>
                 <span className="text-[10px] sm:text-xs text-blue-200">방문객·시장: 2025 연간</span>
               </div>
@@ -217,24 +218,16 @@ export default async function Home() {
             </div>
             <div className="flex gap-2 sm:gap-3 flex-wrap shrink-0">
               <div className="px-3 sm:px-5 py-2 sm:py-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
-                <p className="text-xl sm:text-2xl font-bold">$1,712</p>
-                <p className="text-[9px] sm:text-[10px] text-blue-200 mt-0.5">1인당 지출 (2015)</p>
-              </div>
-              <div className="px-3 sm:px-5 py-2 sm:py-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
-                <p className="text-xl sm:text-2xl font-bold">$1,877</p>
+                <p className="text-xl sm:text-2xl font-bold">${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"}</p>
                 <p className="text-[9px] sm:text-[10px] text-blue-200 mt-0.5">1인당 지출 (2024)</p>
               </div>
-              <div className={`px-3 sm:px-5 py-2 sm:py-3 rounded-xl backdrop-blur-sm border ${
-                yoyPositive
-                  ? "bg-white/15 border-emerald-400/30"
-                  : "bg-white/15 border-red-400/30"
-              }`}>
-                <p className={`text-xl sm:text-2xl font-bold ${
-                  yoyPositive ? "text-emerald-300" : "text-red-300"
-                }`}>{yoyPositive ? "▲" : "▼"} {yoyGrowth}%</p>
-                <p className={`text-[9px] sm:text-[10px] mt-0.5 ${
-                  yoyPositive ? "text-emerald-200" : "text-red-200"
-                }`}>2025 전년 대비 성장률</p>
+              <div className="px-3 sm:px-5 py-2 sm:py-3 rounded-xl bg-white/15 backdrop-blur-sm border border-emerald-400/30">
+                <p className="text-xl sm:text-2xl font-bold text-emerald-300">{behavior2024?.satisfaction ?? 96.5}%</p>
+                <p className="text-[9px] sm:text-[10px] text-emerald-200 mt-0.5">종합 만족도 (2024)</p>
+              </div>
+              <div className="px-3 sm:px-5 py-2 sm:py-3 rounded-xl bg-white/15 backdrop-blur-sm border border-emerald-400/30">
+                <p className="text-xl sm:text-2xl font-bold text-emerald-300">{behavior2024?.revisitIntention ?? 92.3}%</p>
+                <p className="text-[9px] sm:text-[10px] text-emerald-200 mt-0.5">재방문 의향 (2024)</p>
               </div>
             </div>
           </div>
@@ -253,48 +246,49 @@ export default async function Home() {
               </h2>
             </div>
             <p className="text-sm text-zinc-500 ml-4 break-keep">
-              방한여행 행태 및 만족도 조사 (2015 vs 2024) 기반 분석
+              방한여행 행태 및 만족도 조사 (2015~2024) 10개년 추이 분석
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
             <MetricCard
-              title="수익 잠재력 (Per-guest Yield)"
-              subtitle="1인당 관광 지출 (2015 → 2024)"
-              value={`$${behavior2015?.avgSpending?.toLocaleString() ?? "1,712"}`}
-              description={`2024년 기준 $${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"}로 상승`}
+              title="1인당 지출 (Per-guest Yield)"
+              subtitle="2024년 기준"
+              value={`$${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"}`}
+              description="2019년 $1,239 저점 대비 코로나 이전 수준 회복"
               icon="DollarSign"
               highlight={true}
-              trend={{
-                value: `9.6% ($${behavior2024?.avgSpending?.toLocaleString() ?? "1,877"}, 2024)`,
-                positive: true,
-              }}
-            />
-            <MetricCard
-              title="자산 가동률 (Avg. Stay)"
-              subtitle="평균 체류 기간 (2015 → 2024)"
-              value={`${behavior2015?.stayDuration ?? 6.6}일`}
-              description={`2024년 ${behavior2024?.stayDuration ?? 6.7}일로 안정적 유지`}
-              icon="CalendarClock"
-              highlight={true}
-              trend={{
-                value: `1.5% (${behavior2024?.stayDuration ?? 6.7}일, 2024)`,
-                positive: true,
-              }}
             />
             <MetricCard
               title="종합 만족도 (Satisfaction)"
-              subtitle="2024년 기준"
+              subtitle="2015년 93.5% → 2024년"
               value={`${behavior2024?.satisfaction ?? 96.5}%`}
-              description="2015년 대비 전 항목 개선"
+              description="10년간 +3.0%p 실질 개선"
               icon="ThumbsUp"
+              highlight={true}
+              trend={{
+                value: "3.0%p (93.5% → 96.5%)",
+                positive: true,
+              }}
             />
             <MetricCard
               title="재방문 의향 (Revisit Intent)"
-              subtitle="2024년 기준"
+              subtitle="2015년 85.6% → 2024년"
               value={`${behavior2024?.revisitIntention ?? 92.3}%`}
-              description="반복 방문 의향이 90% 이상으로 확인"
+              description="10년간 +6.7%p — 가장 큰 개선 폭"
               icon="UserCheck"
+              highlight={true}
+              trend={{
+                value: "6.7%p (85.6% → 92.3%)",
+                positive: true,
+              }}
+            />
+            <MetricCard
+              title="평균 체류 기간 (Avg. Stay)"
+              subtitle="2024년 기준"
+              value={`${behavior2024?.stayDuration ?? 6.7}일`}
+              description="2015년 6.6일 대비 안정적 유지"
+              icon="CalendarClock"
             />
           </div>
 
@@ -344,21 +338,23 @@ export default async function Home() {
           </div>
 
           {/* 핵심 수치 카드 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-10">
+          <div className={`grid grid-cols-1 ${hasYoyData ? "sm:grid-cols-3" : "sm:grid-cols-2"} gap-4 sm:gap-6 mb-10`}>
             <MetricCard
               title="연간 방문객 수 (Annual Visitors)"
               subtitle="2025년 누적"
               value={totalVisitorsFormatted + "명"}
               icon="UserCheck"
             />
-            <MetricCard
-              title="전년 대비 성장률 (YoY Growth)"
-              subtitle="2025년 연간 (vs 2024)"
-              value={`${yoyPositive ? "▲" : "▼"} ${yoyGrowth}%`}
-              description={`${prevYearVisitors > 0 ? `${(prevYearVisitors / 10000).toFixed(0)}만 → ${totalVisitorsFormatted}명` : ""}`}
-              icon="DollarSign"
-              highlight={true}
-            />
+            {hasYoyData && yoyGrowth && (
+              <MetricCard
+                title="전년 대비 성장률 (YoY Growth)"
+                subtitle="2025년 연간 (vs 2024)"
+                value={`${yoyPositive ? "▲" : "▼"} ${yoyGrowth}%`}
+                description={`${(prevYearVisitors / 10000).toFixed(0)}만 → ${totalVisitorsFormatted}명`}
+                icon="DollarSign"
+                highlight={true}
+              />
+            )}
             <MetricCard
               title="여성 방문객 비중 (Female Ratio)"
               subtitle="2025년 연간"
@@ -376,21 +372,6 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ═══ 섹션 4: 실증 데이터 기반 가설 검증 결과 ═══ */}
-        {/* <section>
-          <div className="mb-10">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-1.5 h-6 rounded-full bg-zinc-500" />
-              <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                실증 데이터 기반 가설 검증 결과
-              </h2>
-            </div>
-            <p className="text-sm text-zinc-500 ml-4 break-keep">
-              비즈니스 가설 8건에 대한 데이터 검증 요약
-            </p>
-          </div>
-          <DeckUpdates items={hypothesisItems} />
-        </section> */}
 
         {/* ━━━ 하단 출처 ━━━ */}
         <footer className="pt-10 pb-6 border-t border-zinc-200 dark:border-zinc-800">

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rural Rest 데이터 분석 리포트 - 방한 관광 실측 데이터 기반",
-  description: "공공 데이터를 통한 Rural Rest 비즈니스 가설 검증 및 인바운드 관광 통계 분석",
+  title: "Rural Rest — 방한관광 실증 분석 대시보드",
+  description: "한국관광 데이터랩 공공 데이터 기반 방한 외래관광객 통계 분석",
 };
 
 export default function RootLayout({

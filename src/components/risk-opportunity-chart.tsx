@@ -13,6 +13,7 @@ import {
   YAxis,
   CartesianGrid,
   ReferenceLine,
+  LabelList,
 } from "recharts";
 import { Plane, MapPin, CalendarRange } from "lucide-react";
 
@@ -65,6 +66,24 @@ export function AirportDistributionChart({ data }: AirportChartProps) {
                 paddingAngle={2}
                 dataKey="value"
                 nameKey="name"
+                label={({ cx, cy, midAngle, outerRadius: oR, value }) => {
+                  const RADIAN = Math.PI / 180;
+                  const radius = oR + 16;
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      style={{ fontSize: "10px", fontWeight: 700, fill: "#52525b" }}
+                    >
+                      {value}%
+                    </text>
+                  );
+                }}
+                labelLine={false}
               >
                 {data.map((_, i) => (
                   <Cell
@@ -185,6 +204,12 @@ export function SeasonalityRiskChart({ data }: SeasonalityChartProps) {
                   }
                 />
               ))}
+              <LabelList
+                dataKey="interest"
+                position="top"
+                formatter={(v: number) => `${v}%`}
+                style={{ fontSize: "9px", fill: "#71717a", fontWeight: 600 }}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>

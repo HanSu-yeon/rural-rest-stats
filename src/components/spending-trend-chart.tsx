@@ -10,8 +10,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  LabelList,
 } from "recharts";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, ArrowRight } from "lucide-react";
 
 interface SpendingTrendChartProps {
   data: Array<{
@@ -43,7 +44,7 @@ export function SpendingTrendChart({ data }: SpendingTrendChartProps) {
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 shrink-0">
             <TrendingUp className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
             <span className="text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-300 whitespace-nowrap">
-              ${firstYear?.spending?.toLocaleString()} → ${lastYear?.spending?.toLocaleString()}
+              코로나 이후 완전 회복
             </span>
           </div>
         </div>
@@ -100,28 +101,67 @@ export function SpendingTrendChart({ data }: SpendingTrendChartProps) {
               fill="url(#spendingGradient)"
               dot={{ r: 3, fill: "#10b981" }}
               activeDot={{ r: 5 }}
-            />
+            >
+              <LabelList
+                dataKey="spending"
+                position="top"
+                formatter={(v: number) => `$${v.toLocaleString()}`}
+                style={{ fontSize: "9px", fill: "#10b981", fontWeight: 600 }}
+                offset={8}
+              />
+            </Area>
           </AreaChart>
         </ResponsiveContainer>
 
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-center">
-          <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800">
-            <p className="text-base sm:text-lg font-bold text-emerald-600">${firstYear?.spending?.toLocaleString()}</p>
-            <p className="text-[10px] text-zinc-500">{firstYear?.year}년</p>
+        {/* 성장 비교 히어로 */}
+        <div className="mt-8 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-50 via-emerald-50/60 to-emerald-50 dark:from-emerald-900/20 dark:via-emerald-900/10 dark:to-emerald-900/20 border border-emerald-200/60 dark:border-emerald-800/40">
+          <div className="flex items-center justify-center gap-3 sm:gap-6">
+            {/* 2015 */}
+            <div className="text-center shrink-0">
+              <p className="text-xl sm:text-2xl font-bold text-zinc-700 dark:text-zinc-200">
+                ${firstYear?.spending?.toLocaleString()}
+              </p>
+              <p className="text-[10px] sm:text-xs text-zinc-400 mt-1">{firstYear?.year}년</p>
+            </div>
+
+            {/* 중앙 화살표 + 회복 메시지 */}
+            <div className="flex flex-col items-center gap-1 px-2 sm:px-5">
+              <div className="flex items-center gap-1.5">
+                <div className="hidden sm:block h-px w-6 bg-emerald-400/60" />
+                <div className="flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/30">
+                  <ArrowRight className="h-5 w-5 sm:h-7 sm:w-7 text-white" />
+                </div>
+                <div className="hidden sm:block h-px w-6 bg-emerald-400/60" />
+              </div>
+              <p className="text-xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 tracking-tight break-keep text-center">
+                회복 + 소폭 상회
+              </p>
+              <p className="text-[10px] sm:text-xs text-emerald-600/70 dark:text-emerald-400/70 font-medium break-keep text-center">
+                2019년 $1,239 저점 → 2024년 코로나 이전 수준 회복
+              </p>
+            </div>
+
+            {/* 2024 */}
+            <div className="text-center shrink-0">
+              <p className="text-xl sm:text-2xl font-bold text-emerald-700 dark:text-emerald-300">
+                ${lastYear?.spending?.toLocaleString()}
+              </p>
+              <p className="text-[10px] sm:text-xs text-zinc-400 mt-1">{lastYear?.year}년</p>
+            </div>
           </div>
-          <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800">
-            <p className="text-base sm:text-lg font-bold text-emerald-600">${lastYear?.spending?.toLocaleString()}</p>
-            <p className="text-[10px] text-zinc-500">{lastYear?.year}년</p>
-          </div>
-          <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800">
-            <p className="text-base sm:text-lg font-bold text-emerald-600">
-              {Number(growthRate) >= 0 ? "▲" : "▼"} {Math.abs(Number(growthRate))}%
-            </p>
-            <p className="text-[10px] text-zinc-500">누적 변동률</p>
-          </div>
-          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800/30 border border-zinc-200 dark:border-zinc-700">
-            <p className="text-base sm:text-lg font-bold text-zinc-600 dark:text-zinc-300 break-keep">회복 확인</p>
-            <p className="text-[10px] text-zinc-500">2020~22년</p>
+
+          {/* 하단 보조 정보 */}
+          <div className="mt-5 flex justify-center gap-3 sm:gap-5">
+            <div className="px-3 py-1.5 rounded-full bg-white/70 dark:bg-zinc-800/50 border border-emerald-200/50 dark:border-emerald-700/30">
+              <span className="text-[10px] sm:text-xs text-zinc-600 dark:text-zinc-400">
+                체류기간 {firstYear?.stayDuration}일 → {lastYear?.stayDuration}일 <span className="text-emerald-600 font-semibold">안정 유지</span>
+              </span>
+            </div>
+            <div className="px-3 py-1.5 rounded-full bg-white/70 dark:bg-zinc-800/50 border border-zinc-200/50 dark:border-zinc-700/30">
+              <span className="text-[10px] sm:text-xs text-zinc-600 dark:text-zinc-400">
+                2020~22년 코로나 충격 후 <span className="text-emerald-600 font-semibold">완전 회복</span>
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
