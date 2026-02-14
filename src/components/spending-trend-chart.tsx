@@ -25,9 +25,6 @@ interface SpendingTrendChartProps {
 export function SpendingTrendChart({ data }: SpendingTrendChartProps) {
   const firstYear = data[0];
   const lastYear = data[data.length - 1];
-  const growthRate = firstYear
-    ? (((lastYear.spending - firstYear.spending) / firstYear.spending) * 100).toFixed(1)
-    : "0";
 
   return (
     <Card className="min-h-fit overflow-hidden">

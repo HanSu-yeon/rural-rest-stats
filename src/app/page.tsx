@@ -19,7 +19,6 @@ import {
   AirportDistributionChart,
   SeasonalityRiskChart,
 } from "@/components/risk-opportunity-chart";
-import { DeckUpdates } from "@/components/deck-updates";
 
 export default async function Home() {
   // ─── 데이터 쿼리 ───────────────────────────────────────
