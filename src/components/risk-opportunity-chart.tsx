@@ -66,11 +66,12 @@ export function AirportDistributionChart({ data }: AirportChartProps) {
                 paddingAngle={2}
                 dataKey="value"
                 nameKey="name"
-                label={({ cx, cy, midAngle, outerRadius: oR, value }) => {
+                label={(props: Record<string, number | string | undefined>) => {
+                  const { cx: cxVal, cy: cyVal, midAngle: ma, outerRadius: oR, value } = props;
                   const RADIAN = Math.PI / 180;
-                  const radius = oR + 16;
-                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                  const radius = Number(oR ?? 0) + 16;
+                  const x = Number(cxVal ?? 0) + radius * Math.cos(-Number(ma ?? 0) * RADIAN);
+                  const y = Number(cyVal ?? 0) + radius * Math.sin(-Number(ma ?? 0) * RADIAN);
                   return (
                     <text
                       x={x}

@@ -79,11 +79,12 @@ export function GenderAgeChart({
                     dataKey="value"
                     startAngle={90}
                     endAngle={-270}
-                    label={({ cx, cy, midAngle, outerRadius: oR, value, name }) => {
+                    label={(props: Record<string, number | string | undefined>) => {
+                      const { cx: cxVal, cy: cyVal, midAngle: ma, outerRadius: oR, value, name } = props;
                       const RADIAN = Math.PI / 180;
-                      const radius = oR + 14;
-                      const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                      const radius = Number(oR ?? 0) + 14;
+                      const x = Number(cxVal ?? 0) + radius * Math.cos(-Number(ma ?? 0) * RADIAN);
+                      const y = Number(cyVal ?? 0) + radius * Math.sin(-Number(ma ?? 0) * RADIAN);
                       return (
                         <text
                           x={x}
