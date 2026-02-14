@@ -16,6 +16,7 @@ import {
   LabelList,
 } from "recharts";
 import { Plane, MapPin, CalendarRange } from "lucide-react";
+import type { PieLabelRenderProps } from "recharts/types/polar/Pie";
 
 /* ───── 공항 분포 도넛 차트 ───── */
 interface AirportChartProps {
@@ -66,12 +67,15 @@ export function AirportDistributionChart({ data }: AirportChartProps) {
                 paddingAngle={2}
                 dataKey="value"
                 nameKey="name"
-                label={(props: Record<string, number | string | undefined>) => {
-                  const { cx: cxVal, cy: cyVal, midAngle: ma, outerRadius: oR, value } = props;
+                label={(props: PieLabelRenderProps) => {
+                  const cx = Number(props.cx ?? 0);
+                  const cy = Number(props.cy ?? 0);
+                  const midAngle = Number(props.midAngle ?? 0);
+                  const oR = Number(props.outerRadius ?? 0);
                   const RADIAN = Math.PI / 180;
-                  const radius = Number(oR ?? 0) + 16;
-                  const x = Number(cxVal ?? 0) + radius * Math.cos(-Number(ma ?? 0) * RADIAN);
-                  const y = Number(cyVal ?? 0) + radius * Math.sin(-Number(ma ?? 0) * RADIAN);
+                  const radius = oR + 16;
+                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
                   return (
                     <text
                       x={x}
@@ -80,7 +84,7 @@ export function AirportDistributionChart({ data }: AirportChartProps) {
                       dominantBaseline="central"
                       style={{ fontSize: "10px", fontWeight: 700, fill: "#52525b" }}
                     >
-                      {value}%
+                      {props.value}%
                     </text>
                   );
                 }}

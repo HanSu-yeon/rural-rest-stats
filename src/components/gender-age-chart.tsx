@@ -15,6 +15,7 @@ import {
   Pie,
   LabelList,
 } from "recharts";
+import type { PieLabelRenderProps } from "recharts/types/polar/Pie";
 
 interface GenderAgeChartProps {
   data: Array<{
@@ -79,21 +80,24 @@ export function GenderAgeChart({
                     dataKey="value"
                     startAngle={90}
                     endAngle={-270}
-                    label={(props: Record<string, number | string | undefined>) => {
-                      const { cx: cxVal, cy: cyVal, midAngle: ma, outerRadius: oR, value, name } = props;
+                    label={(props: PieLabelRenderProps) => {
+                      const cx = Number(props.cx ?? 0);
+                      const cy = Number(props.cy ?? 0);
+                      const midAngle = Number(props.midAngle ?? 0);
+                      const oR = Number(props.outerRadius ?? 0);
                       const RADIAN = Math.PI / 180;
-                      const radius = Number(oR ?? 0) + 14;
-                      const x = Number(cxVal ?? 0) + radius * Math.cos(-Number(ma ?? 0) * RADIAN);
-                      const y = Number(cyVal ?? 0) + radius * Math.sin(-Number(ma ?? 0) * RADIAN);
+                      const radius = oR + 14;
+                      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                      const y = cy + radius * Math.sin(-midAngle * RADIAN);
                       return (
                         <text
                           x={x}
                           y={y}
                           textAnchor="middle"
                           dominantBaseline="central"
-                          style={{ fontSize: "10px", fontWeight: 700, fill: name === "여성" ? "#ec4899" : "#60a5fa" }}
+                          style={{ fontSize: "10px", fontWeight: 700, fill: props.name === "여성" ? "#ec4899" : "#60a5fa" }}
                         >
-                          {value}%
+                          {props.value}%
                         </text>
                       );
                     }}
@@ -180,9 +184,10 @@ export function GenderAgeChart({
                       fill={entry.ageGroup === "21~30세" ? "#ec4899" : "#f9a8d4"}
                     />
                   ))}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   <LabelList
-                    valueAccessor={(entry: { male: number; female: number }) =>
-                      entry.male + entry.female
+                    valueAccessor={(entry: any) =>
+                      Number(entry.male ?? 0) + Number(entry.female ?? 0)
                     }
                     position="top"
                     formatter={(v) => `${v}만`}
