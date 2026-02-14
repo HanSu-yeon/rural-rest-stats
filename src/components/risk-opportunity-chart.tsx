@@ -207,7 +207,7 @@ export function SeasonalityRiskChart({ data }: SeasonalityChartProps) {
               <LabelList
                 dataKey="interest"
                 position="top"
-                formatter={(v: number) => `${v}%`}
+                formatter={(v) => `${v}%`}
                 style={{ fontSize: "9px", fill: "#71717a", fontWeight: 600 }}
               />
             </Bar>

@@ -99,7 +99,7 @@ export function NationalityChart({ data }: NationalityChartProps) {
               <LabelList
                 dataKey="percentage"
                 position="right"
-                formatter={(v: number) => `${v}%`}
+                formatter={(v) => `${v}%`}
                 style={{ fontSize: "10px", fill: "#52525b", fontWeight: 600 }}
               />
             </Bar>

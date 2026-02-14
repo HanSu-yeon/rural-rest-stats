@@ -184,7 +184,7 @@ export function GenderAgeChart({
                       entry.male + entry.female
                     }
                     position="top"
-                    formatter={(v: number) => `${v}만`}
+                    formatter={(v) => `${v}만`}
                     style={{ fontSize: "10px", fill: "#71717a", fontWeight: 600 }}
                   />
                 </Bar>

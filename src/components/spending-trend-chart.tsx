@@ -105,7 +105,7 @@ export function SpendingTrendChart({ data }: SpendingTrendChartProps) {
               <LabelList
                 dataKey="spending"
                 position="top"
-                formatter={(v: number) => `$${v.toLocaleString()}`}
+                formatter={(v) => `$${Number(v).toLocaleString()}`}
                 style={{ fontSize: "9px", fill: "#10b981", fontWeight: 600 }}
                 offset={8}
               />

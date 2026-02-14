@@ -63,7 +63,7 @@ export function AgeChart({ data }: AgeChartProps) {
               <LabelList
                 dataKey="count"
                 position="top"
-                formatter={(v: number) => `${v}천`}
+                formatter={(v) => `${v}천`}
                 style={{ fontSize: "10px", fill: "#3b82f6", fontWeight: 600 }}
               />
             </Bar>
